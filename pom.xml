@@ -10,7 +10,7 @@
     </parent>
     <groupId>firok.spring</groupId>
     <artifactId>plugs</artifactId>
-    <version>0.1.0-j17</version>
+    <version>0.2.0-j17</version>
     <name>SpringPlugs</name>
     <description>SpringPlugs</description>
     <properties>
@@ -34,6 +34,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
+            <version>1.18.28</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
