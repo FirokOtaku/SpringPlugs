@@ -12,148 +12,99 @@ import java.util.Map;
 
 public class GeneralServiceImpl<M extends BaseMapper<T>, T> extends ServiceImpl<M, T>
 {
-    @Override
-    public boolean saveBatch(Collection<T> entityList, int batchSize)
+    public boolean generalSave(T en)
     {
-        return super.saveBatch(entityList, batchSize);
+        return generalSave(en, new Date());
+    }
+    public boolean generalSave(T en, Date timestamp)
+    {
+        if(behaviorCreateSetTimestampCreate)
+            updateTimestampCreate(en, timestamp);
+        if(behaviorCreateSetTimestampUpdate)
+            updateTimestampUpdate(en, timestamp);
+        return super.save(en);
     }
 
-    @Override
-    public boolean saveOrUpdate(T entity)
+    public boolean generalSaveBatch(Collection<T> ens, int batchSize)
     {
-        return super.saveOrUpdate(entity);
+        return generalSaveBatch(ens, batchSize, new Date());
     }
 
-    @Override
-    public boolean saveOrUpdateBatch(Collection<T> entityList, int batchSize)
+    public boolean generalSaveBatch(Collection<T> ens, int batchSize, Date timestamp)
     {
-        return super.saveOrUpdateBatch(entityList, batchSize);
+        for(var en : ens)
+        {
+            if(behaviorCreateSetTimestampCreate)
+                updateTimestampCreate(en, timestamp);
+            if(behaviorCreateSetTimestampUpdate)
+                updateTimestampUpdate(en, timestamp);
+        }
+        return super.saveBatch(ens, batchSize);
     }
 
-    @Override
-    public boolean updateBatchById(Collection<T> entityList, int batchSize)
+    public boolean generalUpdateById(T en)
     {
-        return super.updateBatchById(entityList, batchSize);
+        return generalUpdateById(en, new Date());
     }
 
-    @Override
-    public boolean removeById(Serializable id)
+    public boolean generalUpdateById(T en, Date timestamp)
     {
-        return super.removeById(id);
+        if(behaviorUpdateSetTimestampUpdate)
+            updateTimestampUpdate(en, timestamp);
+        return super.updateById(en);
     }
 
-    @Override
-    public boolean removeByIds(Collection<?> list)
+    public boolean updateBatchById(Collection<T> ens, int batchSize)
     {
-        return super.removeByIds(list);
+        return updateBatchById(ens, batchSize, new Date());
     }
 
-    @Override
-    public boolean removeById(Serializable id, boolean useFill)
+    public boolean updateBatchById(Collection<T> ens, int batchSize, Date timestamp)
     {
-        return super.removeById(id, useFill);
+        if(behaviorUpdateSetTimestampUpdate)
+        {
+            for(var en : ens)
+            {
+                updateTimestampUpdate(en, timestamp);
+            }
+        }
+        return super.updateBatchById(ens, batchSize);
     }
 
-    @Override
-    public boolean removeBatchByIds(Collection<?> list, int batchSize)
+    public boolean generalUpdate(T en, Wrapper<T> wrapper)
     {
-        return super.removeBatchByIds(list, batchSize);
+        return generalUpdate(en, wrapper, new Date());
     }
 
-    @Override
-    public boolean removeBatchByIds(Collection<?> list, int batchSize, boolean useFill)
+    public boolean generalUpdate(T en, Wrapper<T> wrapper, Date timestamp)
     {
-        return super.removeBatchByIds(list, batchSize, useFill);
+        if(behaviorUpdateSetTimestampUpdate)
+            updateTimestampUpdate(en, timestamp);
+        return super.update(en, wrapper);
     }
 
-    @Override
-    public boolean save(T entity)
+    public boolean generalDeleteById(T en)
     {
-        return super.save(entity);
+        return generalDeleteById(en, new Date());
     }
 
-    @Override
-    public boolean saveBatch(Collection<T> entityList)
+    public boolean generalDeleteById(T en, Date timestamp)
     {
-        return super.saveBatch(entityList);
-    }
+        if(behaviorDeleteLogical)
+        {
+            if(behaviorDeleteSetTimestampUpdate)
+                updateTimestampUpdate(en, timestamp);
+            if(behaviorDeleteSetTimestampDelete)
+                updateTimestampDelete(en, timestamp);
+            if(behaviorDeleteSetIsDelete)
+                updateIsDelete(en, true);
 
-    @Override
-    public boolean saveOrUpdateBatch(Collection<T> entityList)
-    {
-        return super.saveOrUpdateBatch(entityList);
-    }
-
-    @Override
-    public boolean removeById(T entity)
-    {
-        return super.removeById(entity);
-    }
-
-    @Override
-    public boolean removeByMap(Map<String, Object> columnMap)
-    {
-        return super.removeByMap(columnMap);
-    }
-
-    @Override
-    public boolean remove(Wrapper<T> queryWrapper)
-    {
-        return super.remove(queryWrapper);
-    }
-
-    @Override
-    public boolean removeByIds(Collection<?> list, boolean useFill)
-    {
-        return super.removeByIds(list, useFill);
-    }
-
-    @Override
-    public boolean removeBatchByIds(Collection<?> list)
-    {
-        return super.removeBatchByIds(list);
-    }
-
-    @Override
-    public boolean removeBatchByIds(Collection<?> list, boolean useFill)
-    {
-        return super.removeBatchByIds(list, useFill);
-    }
-
-    @Override
-    public boolean updateById(T entity)
-    {
-        return super.updateById(entity);
-    }
-
-    @Override
-    public boolean update(Wrapper<T> updateWrapper)
-    {
-        return super.update(updateWrapper);
-    }
-
-    @Override
-    public boolean update(T entity, Wrapper<T> updateWrapper)
-    {
-        return super.update(entity, updateWrapper);
-    }
-
-    @Override
-    public boolean updateBatchById(Collection<T> entityList)
-    {
-        return super.updateBatchById(entityList);
-    }
-
-    @Override
-    public T getById(Serializable id)
-    {
-        return super.getById(id);
-    }
-
-    @Override
-    public boolean saveOrUpdate(T entity, Wrapper<T> updateWrapper)
-    {
-        return super.saveOrUpdate(entity, updateWrapper);
+            return super.updateById(en);
+        }
+        else
+        {
+            return super.removeById(en);
+        }
     }
 
     private static void updateTimestampCreate(Object en, Date timestampCreate)
@@ -206,6 +157,7 @@ public class GeneralServiceImpl<M extends BaseMapper<T>, T> extends ServiceImpl<
     protected boolean behaviorDeleteSetTimestampUpdate = true;
     protected boolean behaviorDeleteSetTimestampDelete = true;
     protected boolean behaviorDeleteSetIsDelete = true;
+    protected boolean behaviorDeleteLogical = true;
 
     /**
      * 自动模板.
@@ -217,6 +169,7 @@ public class GeneralServiceImpl<M extends BaseMapper<T>, T> extends ServiceImpl<
      *     <li>##DELETE_SET_TIMESTAMP_UPDATE## - (布尔值) 是否在删除实体时更新 timestampUpdate 字段</li>
      *     <li>##DELETE_SET_TIMESTAMP_DELETE## - (布尔值) 是否在删除实体时更新 timestampDelete 字段</li>
      *     <li>##DELETE_SET_IS_DELETE## - (布尔值) 是否在删除实体时更新 isDelete 字段</li>
+     *     <li>##DELETE_LOGICAL## - (布尔值) 是否逻辑删除</li>
      * </ul>
      *
      * @see firok.spring.mvci.MVCIntrospective
@@ -244,6 +197,7 @@ extends GeneralServiceImpl<##MAPPER_NAME##, ##BEAN_NAME_FULL##> implements ##SER
         super.behaviorDeleteSetTimestampUpdate = ##DELETE_SET_TIMESTAMP_UPDATE##;
         super.behaviorDeleteSetTimestampDelete = ##DELETE_SET_TIMESTAMP_DELETE##;
         super.behaviorDeleteSetIsDelete = ##DELETE_SET_IS_DELETE##;
+        super.behaviorDeleteLogical = ##DELETE_LOGICAL##;
     }
 }
 """;
