@@ -10,8 +10,10 @@ import java.util.Date;
 @Data
 @Accessors(chain = true)
 public class ChainedIdLongTimestampLongBean
-    implements IdProperty<Long>,
-        TimestampCreateLongProperty, TimestampUpdateLongProperty, TimestampDeleteLongProperty, IsDeleteProperty
+    implements ChainedIdProperty<Long, ChainedIdLongTimestampLongBean>,
+        ChainedTimestampCreateLongProperty<ChainedIdLongTimestampLongBean>,
+        ChainedTimestampDeleteLongProperty<ChainedIdLongTimestampLongBean>,
+        ChainedIsDeleteProperty<ChainedIdLongTimestampLongBean>
 {
     @TableId
     Long id;

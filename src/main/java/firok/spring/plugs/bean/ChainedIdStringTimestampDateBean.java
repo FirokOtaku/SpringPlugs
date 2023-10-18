@@ -10,8 +10,11 @@ import java.util.Date;
 @Data
 @Accessors(chain = true)
 public class ChainedIdStringTimestampDateBean
-    implements IdProperty<String>,
-        TimestampCreateDateProperty, TimestampUpdateDateProperty, TimestampDeleteDateProperty, IsDeleteProperty
+    implements ChainedIdProperty<String, ChainedIdStringTimestampDateBean>,
+        ChainedTimestampCreateDateProperty<ChainedIdStringTimestampDateBean>,
+        ChainedTimestampUpdateDateProperty<ChainedIdStringTimestampDateBean>,
+        ChainedTimestampDeleteDateProperty<ChainedIdStringTimestampDateBean>,
+        ChainedIsDeleteProperty<ChainedIdStringTimestampDateBean>
 {
     @TableId
     String id;
