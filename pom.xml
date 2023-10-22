@@ -10,7 +10,7 @@
     </parent>
     <groupId>firok.spring</groupId>
     <artifactId>plugs</artifactId>
-    <version>0.5.0-j21</version>
+    <version>0.6.0-j21</version>
     <name>SpringPlugs</name>
     <description>SpringPlugs</description>
     <properties>
@@ -70,7 +70,7 @@
         <dependency>
             <groupId>firok</groupId>
             <artifactId>topaz</artifactId>
-            <version>6.1.0</version>
+            <version>6.4.0</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
