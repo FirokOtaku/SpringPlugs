@@ -10,7 +10,7 @@
     </parent>
     <groupId>firok.spring</groupId>
     <artifactId>plugs</artifactId>
-    <version>0.6.0-j21</version>
+    <version>0.7.0-j21</version>
     <name>SpringPlugs</name>
     <description>SpringPlugs</description>
     <properties>
@@ -76,7 +76,7 @@
         <dependency>
             <groupId>firok.spring</groupId>
             <artifactId>mvci</artifactId>
-            <version>17.6.0</version>
+            <version>17.7.0</version>
             <scope>compile</scope>
         </dependency>
         <dependency>

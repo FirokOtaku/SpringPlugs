@@ -1,17 +1,79 @@
 package firok.spring.plugs.mvci;
 
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import firok.spring.plugs.bean.property.*;
+import firok.topaz.general.Collections;
 
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
+import java.util.function.Function;
 
 public class GeneralServiceImpl<M extends BaseMapper<T>, T> extends ServiceImpl<M, T>
 {
+    /**
+     * @since 0.7.0-j21
+     * */
+    public <TypeKey, TypeValue> Map<TypeKey, TypeValue> queryMappingKeyValue(
+            QueryWrapper<T> qw,
+            Function<T, TypeKey> functionKey,
+            Function<T, TypeValue> functionValue
+    )
+    {
+        return Collections.mappingKeyValue(
+                list(qw),
+                functionKey,
+                functionValue
+        );
+    }
+
+    /**
+     * @since 0.7.0-j21
+     * */
+    public <TypeKey, TypeValue> Map<TypeKey, TypeValue> queryMappingKeyValue(
+            Function<T, TypeKey> functionKey,
+            Function<T, TypeValue> functionValue
+    )
+    {
+        return Collections.mappingKeyValue(
+                list(),
+                functionKey,
+                functionValue
+        );
+    }
+
+    /**
+     * @since 0.7.0-j21
+     * */
+    public <TypeKey> Map<TypeKey, T> queryMappingKeyEntity(
+            QueryWrapper<T> qw,
+            Function<T, TypeKey> functionKey
+    )
+    {
+        return Collections.mappingKeyEntity(
+                list(qw),
+                functionKey
+        );
+    }
+
+    /**
+     * @since 0.7.0-j21
+     * */
+    public <TypeKey> Map<TypeKey, T> queryMappingKeyEntity(
+            Function<T, TypeKey> functionKey
+    )
+    {
+        return Collections.mappingKeyEntity(
+                list(),
+                functionKey
+        );
+    }
+
+    // todo high 添加更多 firok.topaz.general.Collections 的方法
+
     public boolean generalSave(T en)
     {
         return generalSave(en, new Date());
@@ -30,6 +92,14 @@ public class GeneralServiceImpl<M extends BaseMapper<T>, T> extends ServiceImpl<
         return generalSaveBatch(ens, batchSize, new Date());
     }
 
+    /**
+     * @since 0.7.0-j21
+     * */
+    public boolean generalSaveBatch(Collection<T> ens)
+    {
+        return generalSaveBatch(ens, 20);
+    }
+
     public boolean generalSaveBatch(Collection<T> ens, int batchSize, Date timestamp)
     {
         for(var en : ens)
@@ -40,6 +110,14 @@ public class GeneralServiceImpl<M extends BaseMapper<T>, T> extends ServiceImpl<
                 updateTimestampUpdate(en, timestamp);
         }
         return super.saveBatch(ens, batchSize);
+    }
+
+    /**
+     * @since 0.7.0-j21
+     * */
+    public boolean generalSaveBatch(Collection<T> ens, Date timestamp)
+    {
+        return generalSaveBatch(ens, 20, timestamp);
     }
 
     public boolean generalUpdateById(T en)
