@@ -7,6 +7,6 @@ public final class SpringPlugs
     private SpringPlugs() { }
 
     public static final String Name = "Spring Plugs";
-    public static final Version Version = new Version(0, 8, 0, "j21");
+    public static final Version Version = new Version(0, 9, 0, "j21");
     public static final String Author = "Firok";
 }

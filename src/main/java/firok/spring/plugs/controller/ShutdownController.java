@@ -59,7 +59,7 @@ public class ShutdownController implements ApplicationContextAware
         var now = dt.format(new Date());
         var pid = ProcessHandle.current().pid();
         var key = UUID.randomUUID().toString().substring(0, 13);
-        return now + '|' + pid + '|' + key + ".lock";
+        return now + '-' + pid + '-' + key + ".lock";
     }
 
     @PostConstruct
