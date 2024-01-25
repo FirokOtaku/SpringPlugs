@@ -1,5 +1,6 @@
 package firok.spring.plugs.component;
 
+import firok.spring.plugs.PlugsExceptions;
 import firok.topaz.general.Encrypts;
 import jakarta.annotation.PostConstruct;
 import lombok.SneakyThrows;
