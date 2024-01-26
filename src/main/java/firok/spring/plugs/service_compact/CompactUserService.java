@@ -4,18 +4,15 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import firok.spring.plugs.PlugsExceptions;
 import firok.spring.plugs.bean.UserBean;
-import firok.spring.plugs.component.EncryptConfig;
+import firok.spring.plugs.config.UserConfig;
 import firok.spring.plugs.mapper.UserMapper;
 import firok.spring.plugs.mvci.GeneralServiceImpl;
 import firok.spring.plugs.util.TableUtil;
-import firok.topaz.database.Databases;
 import firok.topaz.general.CodeException;
-import jakarta.annotation.PostConstruct;
-import org.intellij.lang.annotations.Language;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.stereotype.Service;
 
-import javax.sql.DataSource;
-import java.sql.SQLException;
 import java.util.*;
 
 import static firok.topaz.general.Collections.isEmpty;
@@ -24,26 +21,29 @@ import static firok.topaz.general.Collections.isEmpty;
  * 用户数据相关
  * @implNote 除去第一步获取用户数据可以根据用户名, 其余接口全部基于 id
  * */
-public abstract class CompactUserService
+@Service
+@ConditionalOnBean(UserConfig.class)
+public class CompactUserService extends AbstractCompactService
 {
     @Autowired
     GeneralServiceImpl<UserMapper, UserBean> service;
-    @Autowired
-    DataSource ds;
 
-    /**
-     * @see TableUtil#SqlShowTablesMysql
-     * */
-    protected abstract String sqlShowTables();
-    /**
-     * @see UserBean#CreateTableMysql
-     * */
-    protected abstract String sqlCreateTable();
-
-    @PostConstruct
-    private void postConstruct() throws SQLException
+    @Override
+    protected final String sqlTableName()
     {
-        TableUtil.createTableIfNotExist(ds, UserBean.TableName, this.sqlShowTables(), this.sqlCreateTable());
+        return UserBean.TableName;
+    }
+
+    @Override
+    protected String sqlShowTables()
+    {
+        return TableUtil.SqlShowTablesMysql;
+    }
+
+    @Override
+    protected String sqlCreateTable()
+    {
+        return UserBean.CreateTableMysql;
     }
 
     /**
@@ -139,11 +139,11 @@ public abstract class CompactUserService
     }
 
     @Autowired(required = false)
-    EncryptConfig enc;
+    CompactEncryptService enc;
 
     /**
      * 生成一个 token, 用来在 cookie 里当鉴权 token
-     * @apiNote 调用这个接口需要系统引入了 {@link firok.spring.plugs.component.EncryptConfig} 组件
+     * @apiNote 调用这个接口需要系统引入了 {@link CompactEncryptService} 组件
      * */
     public String generateCookieToken(UserBean user, long timeLast)
     {

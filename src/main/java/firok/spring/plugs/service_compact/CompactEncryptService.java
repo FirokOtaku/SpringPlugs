@@ -1,11 +1,11 @@
-package firok.spring.plugs.component;
+package firok.spring.plugs.service_compact;
 
-import firok.spring.plugs.PlugsExceptions;
+import firok.spring.plugs.config.EncryptConfig;
 import firok.topaz.general.Encrypts;
 import jakarta.annotation.PostConstruct;
 import lombok.SneakyThrows;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.annotation.Configuration;
 
 import java.io.File;
@@ -20,19 +20,12 @@ import java.security.interfaces.RSAPublicKey;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 
-@ConditionalOnExpression("${firok.spring.plugs.encrypt.enable:false}")
+@ConditionalOnBean(EncryptConfig.class)
 @Configuration
-public class EncryptConfig
+public class CompactEncryptService
 {
-	@Value("${firok.spring.plugs.encrypt.private-key-path:./private-key.bin}")
-	public String pathPrivateKey;
-	@Value("${firok.spring.plugs.encrypt.public-key-path:./public-key.bin}")
-	public String pathPublicKey;
-
-	@Value("${firok.spring.plugs.encrypt.private-key-value:}")
-	private String keyValuePrivate;
-	@Value("${firok.spring.plugs.encrypt.public-key-value:}")
-	private String keyValuePublic;
+	@Autowired
+	EncryptConfig config;
 
 	private RSAPublicKey publicKey;
 	private RSAPrivateKey privateKey;
@@ -85,6 +78,11 @@ public class EncryptConfig
 	@PostConstruct
 	void postConstruct()
 	{
+		var keyValuePublic = config.getKeyValuePublic();
+		var keyValuePrivate = config.getKeyValuePrivate();
+		var pathPublicKey = config.getPathPublicKey();
+		var pathPrivateKey = config.getPathPrivateKey();
+
 		if(!keyValuePublic.isEmpty() && !keyValuePrivate.isEmpty())
 		{
 			publicKey = readPublic(Encrypts.decodeBase64_S2B(keyValuePublic));

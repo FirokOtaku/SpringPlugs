@@ -5,36 +5,39 @@ import firok.spring.mvci.MVCIntrospective;
 import lombok.Data;
 import org.intellij.lang.annotations.Language;
 
-/**
- * 上传的文件数据
- * */
 @Data
 @MVCIntrospective
-@TableName(FileBean.TableName)
-public class FileBean extends StringIdTimestampLongBean
+@TableName(TagBean.TableName)
+public class TagBean extends StringIdTimestampLongBean
 {
-    public static final String TableName = "d_plugs_file";
+    public static final String TableName = "d_plugs_tag";
     @SuppressWarnings("SqlNoDataSourceInspection")
     @Language("SQL")
     public static final String CreateTableMysql = """
-            create table if not exists d_plugs_file (
+            create table if not exists d_plugs_tag (
               id varchar(48) not null,
               primary key (id),
               timestamp_create bigint not null,
               timestamp_update bigint not null,
               
-              file_name varchar(256),
-              file_size bigint not null
+              tag_type varchar(32),
+              target_id varchar(48),
+              tag_value varchar(64)
             )
             """;
 
     /**
-     * 文件名
+     * 标签类型
      * */
-    String fileName;
-    /**
-     * 文件大小
-     * */
-    Long fileSize;
+    String tagType;
 
+    /**
+     * 目标 id
+     * */
+    String targetId;
+    
+    /**
+     * 标签值
+     * */
+    String tagValue;
 }

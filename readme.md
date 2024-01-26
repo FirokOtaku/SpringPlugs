@@ -8,11 +8,18 @@ A personal Spring Boot utility library, includes reusable code or boilerplate co
 firok:
   spring:
     plugs:
-      # 启用加密模块
+      # 加密模块
       encrypt:
         enable: true
         private-key-path: ./private-key.bin
         public-key-path: ./public-key.bin
         private-key-value: ...
         public-key-value: ...
+      # 文件模块
+      file:
+        enable: true
+        folder-local: ./files
+      # 标签模块
+      tag:
+        enable: true
 ```
