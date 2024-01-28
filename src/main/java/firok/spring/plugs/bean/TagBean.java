@@ -3,12 +3,14 @@ package firok.spring.plugs.bean;
 import com.baomidou.mybatisplus.annotation.TableName;
 import firok.spring.mvci.MVCIntrospective;
 import lombok.Data;
+import lombok.experimental.Accessors;
 import org.intellij.lang.annotations.Language;
 
 @Data
 @MVCIntrospective
 @TableName(TagBean.TableName)
-public class TagBean extends StringIdTimestampLongBean
+@Accessors(chain = true)
+public class TagBean extends ChainedIdStringTimestampLongBean
 {
     public static final String TableName = "d_plugs_tag";
     @SuppressWarnings("SqlNoDataSourceInspection")
@@ -35,7 +37,7 @@ public class TagBean extends StringIdTimestampLongBean
      * 目标 id
      * */
     String targetId;
-    
+
     /**
      * 标签值
      * */

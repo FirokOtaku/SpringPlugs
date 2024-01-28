@@ -1,8 +1,10 @@
 package firok.spring.plugs.bean;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import firok.spring.mvci.MVCIntrospective;
 import lombok.Data;
+import lombok.experimental.Accessors;
 import org.intellij.lang.annotations.Language;
 
 /**
@@ -11,7 +13,8 @@ import org.intellij.lang.annotations.Language;
 @Data
 @MVCIntrospective
 @TableName(FileBean.TableName)
-public class FileBean extends StringIdTimestampLongBean
+@Accessors(chain = true)
+public class FileBean extends ChainedIdStringTimestampLongBean
 {
     public static final String TableName = "d_plugs_file";
     @SuppressWarnings("SqlNoDataSourceInspection")
@@ -36,5 +39,11 @@ public class FileBean extends StringIdTimestampLongBean
      * 文件大小
      * */
     Long fileSize;
+
+    @TableField(exist = false)
+    transient Long timestampDelete;
+
+    @TableField(exist = false)
+    transient Boolean isDelete;
 
 }

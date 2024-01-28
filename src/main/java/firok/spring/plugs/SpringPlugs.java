@@ -5,11 +5,12 @@ import firok.topaz.general.Version;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ComponentScans;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Component
+@Configuration
 @MapperScan("firok.spring.plugs.mapper")
 @ComponentScans({
         @ComponentScan("firok.spring.plugs.config"),
@@ -25,7 +26,7 @@ public class SpringPlugs
     public static final ProgramMeta META = new ProgramMeta(
             "firok.spring.plugs",
             "Spring Plugs",
-            new Version(0, 12, 0, "j21"),
+            new Version(0, 13, 0, "j21"),
             "personal Spring Boot utility library",
             List.of("Firok"),
             List.of("https://github.com/FirokOtaku/SpringPlugs"),

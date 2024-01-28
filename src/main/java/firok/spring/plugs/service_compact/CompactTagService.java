@@ -3,6 +3,7 @@ package firok.spring.plugs.service_compact;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import firok.spring.plugs.bean.TagBean;
 import firok.spring.plugs.config.FileConfig;
+import firok.spring.plugs.config.TagConfig;
 import firok.spring.plugs.mapper.TagMapper;
 import firok.spring.plugs.mvci.GeneralServiceImpl;
 import firok.spring.plugs.util.TableUtil;
@@ -17,7 +18,7 @@ import java.util.*;
 import static firok.topaz.general.Collections.isEmpty;
 
 @Service
-@ConditionalOnBean(FileConfig.class)
+@ConditionalOnBean(TagConfig.class)
 public class CompactTagService extends AbstractCompactService
 {
     @Autowired

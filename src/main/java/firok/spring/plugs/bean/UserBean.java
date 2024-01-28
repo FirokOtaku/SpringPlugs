@@ -7,6 +7,7 @@ import firok.spring.mvci.MVCIntrospective;
 import firok.spring.mvci.Param;
 import firok.spring.plugs.mvci.GeneralServiceImpl;
 import lombok.Data;
+import lombok.experimental.Accessors;
 import org.intellij.lang.annotations.Language;
 
 /**
@@ -15,6 +16,7 @@ import org.intellij.lang.annotations.Language;
 @Data
 @MVCIntrospective
 @TableName(UserBean.TableName)
+@Accessors(chain = true)
 public class UserBean extends ChainedIdStringTimestampLongBean
 {
     public static final String TableName = "d_plugs_user";
