@@ -10,7 +10,7 @@
     </parent>
     <groupId>firok.spring</groupId>
     <artifactId>plugs</artifactId>
-    <version>0.14.0-j21</version>
+    <version>0.15.0-j21</version>
     <name>SpringPlugs</name>
     <description>SpringPlugs</description>
     <properties>
@@ -21,6 +21,11 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
+
+        <lombok.version>1.18.30</lombok.version>
+        <ebean.version>13.25.0</ebean.version>
+        <mysql.version>8.0.21</mysql.version>
+        <topaz.version>7.15.0</topaz.version>
     </properties>
 
     <dependencies>
@@ -33,7 +38,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.30</version>
+            <version>${lombok.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -57,40 +62,36 @@
         <dependency>
             <groupId>io.ebean</groupId>
             <artifactId>ebean</artifactId>
-            <version>13.25.0</version>
+            <version>${ebean.version}</version>
         </dependency>
         <!-- Test dependencies -->
         <dependency>
             <groupId>io.ebean</groupId>
             <artifactId>ebean-test</artifactId>
-            <version>13.25.0</version>
+            <version>${ebean.version}</version>
             <scope>test</scope>
         </dependency>
+        <!-- java annotation processor to generate query beans -->
+        <dependency>
+            <groupId>io.ebean</groupId>
+            <artifactId>querybean-generator</artifactId>
+            <version>${ebean.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.21</version>
+            <version>${mysql.version}</version>
             <scope>compile</scope>
         </dependency>
 
         <dependency>
             <groupId>firok</groupId>
             <artifactId>topaz</artifactId>
-            <version>7.15.0</version>
+            <version>${topaz.version}</version>
             <scope>compile</scope>
         </dependency>
-        <dependency>
-            <groupId>firok.spring</groupId>
-            <artifactId>mvci</artifactId>
-            <version>17.7.0</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>firok.spring</groupId>
-            <artifactId>dbsculptor</artifactId>
-            <version>17.3.0</version>
-        </dependency>
-
     </dependencies>
 
     <build>
@@ -116,28 +117,19 @@
                 <executions>
                     <execution>
                         <id>Compile With Annotation Processing</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>compile</goal>
-                        </goals>
                         <configuration>
                             <source>21</source>
                             <target>21</target>
                             <annotationProcessorPaths>
                                 <path>
-                                    <groupId>io.ebean</groupId>
-                                    <artifactId>querybean-generator</artifactId>
-                                    <version>13.25.0</version>
-                                </path>
-                                <path>
                                     <groupId>org.projectlombok</groupId>
                                     <artifactId>lombok</artifactId>
-                                    <version>1.18.30</version>
+                                    <version>${lombok.version}</version>
                                 </path>
                                 <path>
-                                    <groupId>firok.spring</groupId>
-                                    <artifactId>mvci</artifactId>
-                                    <version>17.6.0</version>
+                                    <groupId>io.ebean</groupId>
+                                    <artifactId>querybean-generator</artifactId>
+                                    <version>${ebean.version}</version>
                                 </path>
                             </annotationProcessorPaths>
                         </configuration>
@@ -154,18 +146,6 @@
 <!--                    <compilerArgs>&#45;&#45;enable-preview</compilerArgs>-->
                 </configuration>
             </plugin>
-<!--            <plugin>-->
-<!--                <groupId>org.springframework.boot</groupId>-->
-<!--                <artifactId>spring-boot-maven-plugin</artifactId>-->
-<!--                <configuration>-->
-<!--                    <excludes>-->
-<!--                        <exclude>-->
-<!--                            <groupId>org.projectlombok</groupId>-->
-<!--                            <artifactId>lombok</artifactId>-->
-<!--                        </exclude>-->
-<!--                    </excludes>-->
-<!--                </configuration>-->
-<!--            </plugin>-->
         </plugins>
     </build>
 

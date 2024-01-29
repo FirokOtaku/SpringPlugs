@@ -5,9 +5,11 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 
 import javax.persistence.Id;
+import javax.persistence.MappedSuperclass;
 import java.util.Date;
 
 @Data
+@MappedSuperclass
 @Accessors(chain = false)
 public class StringIdTimestampDateBean
     implements IdProperty<String>,

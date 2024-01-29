@@ -8,8 +8,10 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 
 import javax.persistence.Id;
+import javax.persistence.MappedSuperclass;
 
 @Data
+@MappedSuperclass
 @Accessors(chain = true)
 public class ChainedIdLongTimestampLongBean
     implements ChainedIdProperty<Long, ChainedIdLongTimestampLongBean>,

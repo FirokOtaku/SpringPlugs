@@ -1,8 +1,7 @@
-package firok.spring.plugs.service_compact;
+package firok.spring.plugs.service;
 
 import firok.spring.plugs.bean.FileBean;
 import firok.spring.plugs.config.FileConfig;
-import firok.spring.plugs.mvci.GeneralService;
 import firok.spring.plugs.util.TableUtil;
 import firok.topaz.hash.IHashMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +14,6 @@ import java.io.File;
 @ConditionalOnBean(FileConfig.class)
 public class CompactFileService extends AbstractCompactService
 {
-    @Autowired
-    GeneralService<FileBean> service;
-
     @Override
     protected String sqlShowTables()
     {

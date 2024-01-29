@@ -1,20 +1,15 @@
 package firok.spring.plugs.bean;
 
-import firok.spring.mvci.MVCIntrospective;
 import lombok.Data;
-import lombok.experimental.Accessors;
 import org.intellij.lang.annotations.Language;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 @Data
 @Entity
 @Table(name = TagBean.TableName)
-@MVCIntrospective
-@Accessors(chain = true)
-public class TagBean extends ChainedIdStringTimestampLongBean
+public class TagBean extends AbstractPlugBean
 {
     public static final String TableName = "d_plugs_tag";
     @SuppressWarnings("SqlNoDataSourceInspection")
@@ -46,10 +41,4 @@ public class TagBean extends ChainedIdStringTimestampLongBean
      * 标签值
      * */
     String tagValue;
-
-    @Transient
-    transient Long timestampDelete;
-
-    @Transient
-    transient Boolean isDelete;
 }

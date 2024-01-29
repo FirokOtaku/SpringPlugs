@@ -1,23 +1,18 @@
 package firok.spring.plugs.bean;
 
-import firok.spring.mvci.MVCIntrospective;
 import lombok.Data;
-import lombok.experimental.Accessors;
 import org.intellij.lang.annotations.Language;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 /**
  * 用户数据
  * */
 @Data
 @Entity
-@Table(name = TagBean.TableName)
-@MVCIntrospective
-@Accessors(chain = true)
-public class UserBean extends ChainedIdStringTimestampLongBean
+@Table(name = UserBean.TableName)
+public class UserBean extends AbstractPlugBean
 {
     public static final String TableName = "d_plugs_user";
     @SuppressWarnings("SqlNoDataSourceInspection")
@@ -52,10 +47,4 @@ public class UserBean extends ChainedIdStringTimestampLongBean
      * 用户 token 加盐
      * */
     String tokenCookie;
-
-    @Transient
-    transient Long timestampDelete;
-
-    @Transient
-    transient Boolean isDelete;
 }

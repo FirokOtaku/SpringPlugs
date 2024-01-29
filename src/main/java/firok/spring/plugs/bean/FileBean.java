@@ -1,13 +1,10 @@
 package firok.spring.plugs.bean;
 
-import firok.spring.mvci.MVCIntrospective;
 import lombok.Data;
-import lombok.experimental.Accessors;
 import org.intellij.lang.annotations.Language;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 /**
  * 上传的文件数据
@@ -15,9 +12,7 @@ import javax.persistence.Transient;
 @Data
 @Entity
 @Table(name = FileBean.TableName)
-@MVCIntrospective
-@Accessors(chain = true)
-public class FileBean extends ChainedIdStringTimestampLongBean
+public class FileBean extends AbstractPlugBean
 {
     public static final String TableName = "d_plugs_file";
     @SuppressWarnings("SqlNoDataSourceInspection")
@@ -42,10 +37,4 @@ public class FileBean extends ChainedIdStringTimestampLongBean
      * 文件大小
      * */
     Long fileSize;
-
-    @Transient
-    transient Long timestampDelete;
-
-    @Transient
-    transient Boolean isDelete;
 }

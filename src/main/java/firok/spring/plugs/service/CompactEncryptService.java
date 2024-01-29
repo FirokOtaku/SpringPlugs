@@ -1,4 +1,4 @@
-package firok.spring.plugs.service_compact;
+package firok.spring.plugs.service;
 
 import firok.spring.plugs.config.EncryptConfig;
 import firok.topaz.general.Encrypts;

@@ -1,7 +1,5 @@
 package firok.spring.plugs.util;
 
-import firok.spring.plugs.PlugsExceptions;
-import firok.spring.plugs.bean.UserBean;
 import firok.spring.plugs.bean.property.*;
 import firok.topaz.database.Databases;
 import org.intellij.lang.annotations.Language;
