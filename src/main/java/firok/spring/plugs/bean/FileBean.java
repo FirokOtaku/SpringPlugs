@@ -1,18 +1,21 @@
 package firok.spring.plugs.bean;
 
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableName;
 import firok.spring.mvci.MVCIntrospective;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import org.intellij.lang.annotations.Language;
 
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
 /**
  * 上传的文件数据
  * */
 @Data
+@Entity
+@Table(name = FileBean.TableName)
 @MVCIntrospective
-@TableName(FileBean.TableName)
 @Accessors(chain = true)
 public class FileBean extends ChainedIdStringTimestampLongBean
 {
@@ -40,10 +43,9 @@ public class FileBean extends ChainedIdStringTimestampLongBean
      * */
     Long fileSize;
 
-    @TableField(exist = false)
+    @Transient
     transient Long timestampDelete;
 
-    @TableField(exist = false)
+    @Transient
     transient Boolean isDelete;
-
 }

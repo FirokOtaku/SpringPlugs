@@ -1,11 +1,8 @@
 package firok.spring.plugs.service_compact;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import firok.spring.plugs.bean.TagBean;
-import firok.spring.plugs.config.FileConfig;
 import firok.spring.plugs.config.TagConfig;
-import firok.spring.plugs.mapper.TagMapper;
-import firok.spring.plugs.mvci.GeneralServiceImpl;
+import firok.spring.plugs.mvci.GeneralService;
 import firok.spring.plugs.util.TableUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -22,7 +19,7 @@ import static firok.topaz.general.Collections.isEmpty;
 public class CompactTagService extends AbstractCompactService
 {
     @Autowired
-    GeneralServiceImpl<TagMapper, TagBean> service;
+    GeneralService<TagBean> service;
 
     @Override
     protected final String sqlTableName()
@@ -47,12 +44,13 @@ public class CompactTagService extends AbstractCompactService
             @NotNull String targetId
     )
     {
-        var qw = new QueryWrapper<TagBean>().lambda()
-                .eq(TagBean::getTagType, tagType)
-                .eq(TagBean::getTargetId, targetId);
-        return service.list(qw).stream()
-                      .map(TagBean::getTagValue)
-                      .toList();
+//        var qw = DB.createQuery(TagBean.class)
+//                .eq(TagBean::getTagType, tagType)
+//                .eq(TagBean::getTargetId, targetId);
+//        return service.list(qw).stream()
+//                      .map(TagBean::getTagValue)
+//                      .toList();
+        return null;
     }
 
     public List<String> getTargetTags(
@@ -69,23 +67,23 @@ public class CompactTagService extends AbstractCompactService
             @Nullable Collection<String> tagValues
     )
     {
-        var qw = new QueryWrapper<TagBean>().lambda()
-                .eq(TagBean::getTagType, tagType)
-                .eq(TagBean::getTargetId, targetId);
-        service.remove(qw);
-        if(isEmpty(tagValues)) return;
-        var now = new Date();
-        var tags = new ArrayList<TagBean>();
-        for(var tagValue : tagValues)
-        {
-            var tag = new TagBean();
-            tag.setId(UUID.randomUUID().toString());
-            tag.setTagType(tagType);
-            tag.setTargetId(targetId);
-            tag.setTagValue(tagValue);
-            tags.add(tag);
-        }
-        service.generalSaveBatch(tags, 50, now);
+//        var qw = new QueryWrapper<TagBean>().lambda()
+//                .eq(TagBean::getTagType, tagType)
+//                .eq(TagBean::getTargetId, targetId);
+//        service.remove(qw);
+//        if(isEmpty(tagValues)) return;
+//        var now = new Date();
+//        var tags = new ArrayList<TagBean>();
+//        for(var tagValue : tagValues)
+//        {
+//            var tag = new TagBean();
+//            tag.setId(UUID.randomUUID().toString());
+//            tag.setTagType(tagType);
+//            tag.setTargetId(targetId);
+//            tag.setTagValue(tagValue);
+//            tags.add(tag);
+//        }
+//        service.generalSaveBatch(tags, 50, now);
     }
 
     public void setTargetTags(

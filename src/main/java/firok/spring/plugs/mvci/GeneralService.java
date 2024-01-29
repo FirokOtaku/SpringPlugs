@@ -1,30 +1,37 @@
 package firok.spring.plugs.mvci;
 
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import firok.spring.mvci.MVCIntrospective;
 import firok.spring.plugs.bean.property.*;
 import firok.topaz.general.Collections;
+import io.ebean.DB;
+import io.ebean.Query;
 
 import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
 import java.util.function.Function;
 
-public class GeneralServiceImpl<M extends BaseMapper<T>, T> extends ServiceImpl<M, T>
+import static firok.topaz.general.Collections.sizeOf;
+
+public class GeneralService<TypeBean>
 {
+    protected final Class<TypeBean> classBean;
+    public GeneralService(Class<TypeBean> classBean)
+    {
+        this.classBean = classBean;
+    }
+
     /**
      * @since 0.7.0-j21
      * */
     public <TypeKey, TypeValue> Map<TypeKey, TypeValue> queryMappingKeyValue(
-            QueryWrapper<T> qw,
-            Function<T, TypeKey> functionKey,
-            Function<T, TypeValue> functionValue
+            Query<TypeBean> qw,
+            Function<TypeBean, TypeKey> functionKey,
+            Function<TypeBean, TypeValue> functionValue
     )
     {
         return Collections.mappingKeyValue(
-                list(qw),
+                qw.findList(),
                 functionKey,
                 functionValue
         );
@@ -34,12 +41,12 @@ public class GeneralServiceImpl<M extends BaseMapper<T>, T> extends ServiceImpl<
      * @since 0.7.0-j21
      * */
     public <TypeKey, TypeValue> Map<TypeKey, TypeValue> queryMappingKeyValue(
-            Function<T, TypeKey> functionKey,
-            Function<T, TypeValue> functionValue
+            Function<TypeBean, TypeKey> functionKey,
+            Function<TypeBean, TypeValue> functionValue
     )
     {
         return Collections.mappingKeyValue(
-                list(),
+                DB.createQuery(classBean).findList(),
                 functionKey,
                 functionValue
         );
@@ -48,13 +55,13 @@ public class GeneralServiceImpl<M extends BaseMapper<T>, T> extends ServiceImpl<
     /**
      * @since 0.7.0-j21
      * */
-    public <TypeKey> Map<TypeKey, T> queryMappingKeyEntity(
-            QueryWrapper<T> qw,
-            Function<T, TypeKey> functionKey
+    public <TypeKey> Map<TypeKey, TypeBean> queryMappingKeyEntity(
+            Query<TypeBean> qw,
+            Function<TypeBean, TypeKey> functionKey
     )
     {
         return Collections.mappingKeyEntity(
-                list(qw),
+                qw.findList(),
                 functionKey
         );
     }
@@ -62,45 +69,48 @@ public class GeneralServiceImpl<M extends BaseMapper<T>, T> extends ServiceImpl<
     /**
      * @since 0.7.0-j21
      * */
-    public <TypeKey> Map<TypeKey, T> queryMappingKeyEntity(
-            Function<T, TypeKey> functionKey
+    public <TypeKey> Map<TypeKey, TypeBean> queryMappingKeyEntity(
+            Function<TypeBean, TypeKey> functionKey
     )
     {
         return Collections.mappingKeyEntity(
-                list(),
+                DB.createQuery(classBean).findList(),
                 functionKey
         );
     }
 
     // todo high 添加更多 firok.topaz.general.Collections 的方法
 
-    public boolean generalSave(T en)
+    public boolean generalSave(TypeBean en)
     {
         return generalSave(en, new Date());
     }
-    public boolean generalSave(T en, Date timestamp)
+    public boolean generalSave(TypeBean en, Date timestamp)
     {
-        if(behaviorCreateSetTimestampCreate)
-            updateTimestampCreate(en, timestamp);
-        if(behaviorCreateSetTimestampUpdate)
-            updateTimestampUpdate(en, timestamp);
-        return super.save(en);
-    }
-
-    public boolean generalSaveBatch(Collection<T> ens, int batchSize)
-    {
-        return generalSaveBatch(ens, batchSize, new Date());
+        try
+        {
+            if(behaviorCreateSetTimestampCreate)
+                updateTimestampCreate(en, timestamp);
+            if(behaviorCreateSetTimestampUpdate)
+                updateTimestampUpdate(en, timestamp);
+            DB.save(en);
+            return true;
+        }
+        catch (Exception any)
+        {
+            return false;
+        }
     }
 
     /**
      * @since 0.7.0-j21
      * */
-    public boolean generalSaveBatch(Collection<T> ens)
+    public boolean generalSaveBatch(Collection<TypeBean> ens)
     {
-        return generalSaveBatch(ens, 20);
+        return generalSaveBatch(ens, new Date());
     }
 
-    public boolean generalSaveBatch(Collection<T> ens, int batchSize, Date timestamp)
+    public boolean generalSaveBatch(Collection<TypeBean> ens, Date timestamp)
     {
         for(var en : ens)
         {
@@ -109,79 +119,78 @@ public class GeneralServiceImpl<M extends BaseMapper<T>, T> extends ServiceImpl<
             if(behaviorCreateSetTimestampUpdate)
                 updateTimestampUpdate(en, timestamp);
         }
-        return super.saveBatch(ens, batchSize);
+        return sizeOf(ens) == DB.saveAll(ens);
     }
 
-    /**
-     * @since 0.7.0-j21
-     * */
-    public boolean generalSaveBatch(Collection<T> ens, Date timestamp)
-    {
-        return generalSaveBatch(ens, 20, timestamp);
-    }
-
-    public boolean generalUpdateById(T en)
+    public boolean generalUpdateById(TypeBean en)
     {
         return generalUpdateById(en, new Date());
     }
 
-    public boolean generalUpdateById(T en, Date timestamp)
+    public boolean generalUpdateById(TypeBean en, Date timestamp)
     {
-        if(behaviorUpdateSetTimestampUpdate)
-            updateTimestampUpdate(en, timestamp);
-        return super.updateById(en);
-    }
-
-    public boolean updateBatchById(Collection<T> ens, int batchSize)
-    {
-        return updateBatchById(ens, batchSize, new Date());
-    }
-
-    public boolean updateBatchById(Collection<T> ens, int batchSize, Date timestamp)
-    {
-        if(behaviorUpdateSetTimestampUpdate)
+        try
         {
-            for(var en : ens)
-            {
+            if(behaviorUpdateSetTimestampUpdate)
                 updateTimestampUpdate(en, timestamp);
-            }
+            DB.update(en);
+            return true;
         }
-        return super.updateBatchById(ens, batchSize);
+        catch (Exception any)
+        {
+            return handleException(any);
+        }
     }
 
-    public boolean generalUpdate(T en, Wrapper<T> wrapper)
+    public boolean updateBatchById(Collection<TypeBean> ens, Date timestamp)
     {
-        return generalUpdate(en, wrapper, new Date());
+        try
+        {
+            if(behaviorUpdateSetTimestampUpdate)
+            {
+                for(var en : ens)
+                {
+                    updateTimestampUpdate(en, timestamp);
+                }
+            }
+            DB.updateAll(ens);
+            return true;
+        }
+        catch (Exception any)
+        {
+            return handleException(any);
+        }
     }
 
-    public boolean generalUpdate(T en, Wrapper<T> wrapper, Date timestamp)
-    {
-        if(behaviorUpdateSetTimestampUpdate)
-            updateTimestampUpdate(en, timestamp);
-        return super.update(en, wrapper);
-    }
-
-    public boolean generalDeleteById(T en)
+    public boolean generalDeleteById(TypeBean en)
     {
         return generalDeleteById(en, new Date());
     }
 
-    public boolean generalDeleteById(T en, Date timestamp)
+    public boolean generalDeleteById(TypeBean en, Date timestamp)
     {
-        if(behaviorDeleteLogical)
+        try
         {
-            if(behaviorDeleteSetTimestampUpdate)
-                updateTimestampUpdate(en, timestamp);
-            if(behaviorDeleteSetTimestampDelete)
-                updateTimestampDelete(en, timestamp);
-            if(behaviorDeleteSetIsDelete)
-                updateIsDelete(en, true);
+            if(behaviorDeleteLogical)
+            {
+                if(behaviorDeleteSetTimestampUpdate)
+                    updateTimestampUpdate(en, timestamp);
+                if(behaviorDeleteSetTimestampDelete)
+                    updateTimestampDelete(en, timestamp);
+                if(behaviorDeleteSetIsDelete)
+                    updateIsDelete(en, true);
 
-            return super.updateById(en);
+                DB.update(en);
+                return true;
+            }
+            else
+            {
+                return DB.delete(en);
+            }
         }
-        else
+        catch (Exception any)
         {
-            return super.removeById(en);
+            return handleException(any);
         }
     }
 
@@ -236,10 +245,26 @@ public class GeneralServiceImpl<M extends BaseMapper<T>, T> extends ServiceImpl<
     protected boolean behaviorDeleteSetTimestampDelete = true;
     protected boolean behaviorDeleteSetIsDelete = true;
     protected boolean behaviorDeleteLogical = true;
+    protected boolean behaviorThrowException = false;
+
+    private boolean handleException(Exception any)
+    {
+        if(behaviorThrowException)
+        {
+            throw new RuntimeException(any);
+        }
+        return false;
+    }
+
+    public static final String TemplateService = """
+            package ##SERVICE_PACKAGE##;
+                        
+            public interface ##SERVICE_NAME## { }
+            """;
 
     /**
      * 自动模板.
-     * 需为 @MVCIntrospective.extraParams 提供如下参数:
+     * 需为 {@link MVCIntrospective#extraParams} 提供如下参数:
      * <ul>
      *     <li>##CREATE_SET_TIMESTAMP_CREATE## - (布尔值) 是否在插入实体时更新 timestampCreate 字段</li>
      *     <li>##CREATE_SET_TIMESTAMP_UPDATE## - (布尔值) 是否在插入实体时更新 timestampUpdate 字段</li>
@@ -248,27 +273,26 @@ public class GeneralServiceImpl<M extends BaseMapper<T>, T> extends ServiceImpl<
      *     <li>##DELETE_SET_TIMESTAMP_DELETE## - (布尔值) 是否在删除实体时更新 timestampDelete 字段</li>
      *     <li>##DELETE_SET_IS_DELETE## - (布尔值) 是否在删除实体时更新 isDelete 字段</li>
      *     <li>##DELETE_LOGICAL## - (布尔值) 是否逻辑删除</li>
+     *     <li>##THROW_EXCEPTION## - (布尔值) 是否抛出内部异常</li>
      * </ul>
      *
      * @see firok.spring.mvci.MVCIntrospective
-     * @see com.baomidou.mybatisplus.extension.service.impl.ServiceImpl
      * */
-    public static final String Template = """
+    public static final String TemplateServiceImpl = """
 package ##SERVICE_IMPL_PACKAGE##;
 
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import ##MAPPER_PACKAGE##.##MAPPER_NAME##;
-import ##SERVICE_PACKAGE##.##SERVICE_NAME##;
 import ##BEAN_PACKAGE##.##BEAN_NAME_FULL##;
 import org.springframework.stereotype.Service;
 
-import firok.spring.plugs.mvci.GeneralServiceImpl;
+import firok.spring.plugs.mvci.GeneralService;
 
 @Service
 public class ##SERVICE_IMPL_NAME##
-extends GeneralServiceImpl<##MAPPER_NAME##, ##BEAN_NAME_FULL##> implements ##SERVICE_NAME##
+extends GeneralService<##BEAN_NAME_FULL##>
 {
+    public ##SERVICE_IMPL_NAME##()
     {
+        super(##BEAN_NAME_FULL##.class);
         super.behaviorCreateSetTimestampCreate = ##CREATE_SET_TIMESTAMP_CREATE##;
         super.behaviorCreateSetTimestampUpdate = ##CREATE_SET_TIMESTAMP_UPDATE##;
         super.behaviorUpdateSetTimestampUpdate = ##UPDATE_SET_TIMESTAMP_UPDATE##;
@@ -276,6 +300,7 @@ extends GeneralServiceImpl<##MAPPER_NAME##, ##BEAN_NAME_FULL##> implements ##SER
         super.behaviorDeleteSetTimestampDelete = ##DELETE_SET_TIMESTAMP_DELETE##;
         super.behaviorDeleteSetIsDelete = ##DELETE_SET_IS_DELETE##;
         super.behaviorDeleteLogical = ##DELETE_LOGICAL##;
+        super.behaviorThrowException = ##THROW_EXCEPTION##;
     }
 }
 """;

@@ -1,21 +1,21 @@
 package firok.spring.plugs.bean;
 
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableName;
-import firok.spring.mvci.Constants;
 import firok.spring.mvci.MVCIntrospective;
-import firok.spring.mvci.Param;
-import firok.spring.plugs.mvci.GeneralServiceImpl;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import org.intellij.lang.annotations.Language;
+
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
  * 用户数据
  * */
 @Data
+@Entity
+@Table(name = TagBean.TableName)
 @MVCIntrospective
-@TableName(UserBean.TableName)
 @Accessors(chain = true)
 public class UserBean extends ChainedIdStringTimestampLongBean
 {
@@ -53,9 +53,9 @@ public class UserBean extends ChainedIdStringTimestampLongBean
      * */
     String tokenCookie;
 
-    @TableField(exist = false)
+    @Transient
     transient Long timestampDelete;
 
-    @TableField(exist = false)
+    @Transient
     transient Boolean isDelete;
 }

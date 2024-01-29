@@ -2,8 +2,7 @@ package firok.spring.plugs.service_compact;
 
 import firok.spring.plugs.bean.FileBean;
 import firok.spring.plugs.config.FileConfig;
-import firok.spring.plugs.mapper.FileMapper;
-import firok.spring.plugs.mvci.GeneralServiceImpl;
+import firok.spring.plugs.mvci.GeneralService;
 import firok.spring.plugs.util.TableUtil;
 import firok.topaz.hash.IHashMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +16,7 @@ import java.io.File;
 public class CompactFileService extends AbstractCompactService
 {
     @Autowired
-    GeneralServiceImpl<FileMapper, FileBean> service;
+    GeneralService<FileBean> service;
 
     @Override
     protected String sqlShowTables()

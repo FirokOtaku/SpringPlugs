@@ -1,11 +1,10 @@
 package firok.spring.plugs.bean;
 
-import com.baomidou.mybatisplus.annotation.TableId;
 import firok.spring.plugs.bean.property.*;
 import lombok.Data;
-import lombok.Setter;
 import lombok.experimental.Accessors;
 
+import javax.persistence.Id;
 import java.util.Date;
 
 @Data
@@ -17,7 +16,7 @@ public class ChainedIdLongTimestampDateBean
         ChainedTimestampDeleteDateProperty<ChainedIdLongTimestampDateBean>,
         ChainedIsDeleteProperty<ChainedIdLongTimestampDateBean>
 {
-    @TableId
+    @Id
     Long id;
     Date timestampCreate, timestampUpdate, timestampDelete;
     Boolean isDelete;

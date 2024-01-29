@@ -80,7 +80,7 @@ public class TableUtil
             var context = Databases.executeQuery(conn, sqlShowTables);
             var rs = context.rs())
         {
-            var listTable = Databases.collectField(rs, 0, String.class);
+            var listTable = Databases.collectField(rs, 1, String.class);
             if(!listTable.contains(tableName))
             {
                 try (var ignored = Databases.executeUpdate(conn, sqlCreateTable)) { }

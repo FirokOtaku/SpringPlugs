@@ -5,12 +5,12 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.1.8</version>
+        <version>3.2.2</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>firok.spring</groupId>
     <artifactId>plugs</artifactId>
-    <version>0.13.0-j21</version>
+    <version>0.14.0-j21</version>
     <name>SpringPlugs</name>
     <description>SpringPlugs</description>
     <properties>
@@ -55,10 +55,16 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-boot-starter</artifactId>
-            <version>3.5.5</version>
-            <scope>compile</scope>
+            <groupId>io.ebean</groupId>
+            <artifactId>ebean</artifactId>
+            <version>13.25.0</version>
+        </dependency>
+        <!-- Test dependencies -->
+        <dependency>
+            <groupId>io.ebean</groupId>
+            <artifactId>ebean-test</artifactId>
+            <version>13.25.0</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>mysql</groupId>
@@ -91,6 +97,19 @@
         <finalName>spring-plugs-${project.version}</finalName>
         <plugins>
             <plugin>
+                <groupId>io.repaint.maven</groupId>
+                <artifactId>tiles-maven-plugin</artifactId>
+                <version>2.22</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <tiles>
+                        <!-- other tiles ... -->
+                        <tile>io.ebean.tile:enhancement:13.25.0</tile>
+                    </tiles>
+                </configuration>
+            </plugin>
+
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.10.1</version>
@@ -105,6 +124,11 @@
                             <source>21</source>
                             <target>21</target>
                             <annotationProcessorPaths>
+                                <path>
+                                    <groupId>io.ebean</groupId>
+                                    <artifactId>querybean-generator</artifactId>
+                                    <version>13.25.0</version>
+                                </path>
                                 <path>
                                     <groupId>org.projectlombok</groupId>
                                     <artifactId>lombok</artifactId>

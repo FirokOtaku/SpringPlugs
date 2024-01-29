@@ -1,10 +1,10 @@
 package firok.spring.plugs.bean;
 
-import com.baomidou.mybatisplus.annotation.TableId;
 import firok.spring.plugs.bean.property.*;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import javax.persistence.Id;
 import java.util.Date;
 
 @Data
@@ -13,7 +13,7 @@ public class IdLongTimestampDateBean
     implements IdProperty<Long>,
         TimestampCreateDateProperty, TimestampUpdateDateProperty, TimestampDeleteDateProperty, IsDeleteProperty
 {
-    @TableId
+    @Id
     Long id;
     Date timestampCreate, timestampUpdate, timestampDelete;
     Boolean isDelete;

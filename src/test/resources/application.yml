@@ -8,6 +8,8 @@ firok:
       file:
         enable: true
         folder-local: ./caches
+      tag:
+        enable: true
       user:
         enable: true
 

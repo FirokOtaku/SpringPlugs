@@ -17,7 +17,6 @@ import javax.sql.DataSource;
 @SpringBootTest(
         classes = {
                 DataSourceConfig.class,
-                MybatisPlusConfig.class,
                 SpringPlugs.class,
                 EncryptConfig.class,
                 FileConfig.class,
