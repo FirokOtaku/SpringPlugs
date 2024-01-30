@@ -2,6 +2,7 @@ package firok.spring.plugs.service;
 
 import firok.spring.plugs.config.EncryptConfig;
 import firok.topaz.general.Encrypts;
+import firok.topaz.resource.Files;
 import jakarta.annotation.PostConstruct;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,11 +89,7 @@ public class CompactEncryptService
 			publicKey = readPublic(Encrypts.decodeBase64_S2B(keyValuePublic));
 			privateKey = readPrivate(Encrypts.decodeBase64_S2B(keyValuePrivate));
 		}
-		else if(!pathPublicKey.isEmpty() &&
-				!pathPrivateKey.isEmpty() &&
-				new File(pathPublicKey).exists() &&
-				new File(pathPrivateKey).exists()
-		)
+		else if(Files.checkExist(pathPrivateKey, true) && Files.checkExist(pathPublicKey, true))
 		{
 			try(var ifs = new FileInputStream(pathPublicKey))
 			{

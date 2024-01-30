@@ -5,6 +5,8 @@ firok:
         enable: true
       encrypt:
         enable: true
+        private-key-path: ./caches/private.bin
+        public-key-path: ./caches/public.bin
       file:
         enable: true
         folder-local: ./caches

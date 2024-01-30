@@ -96,7 +96,7 @@ public class CompactUserService extends AbstractCompactService
      * @throws CodeException 如果遇到问题则抛出
      * @apiNote 这个接口本身不会对获取到的用户数据做去敏处理, 调用者需要自行将密钥等字段清空
      * */
-    public UserBean auth(String username, String password)
+    public UserBean checkPassword(String username, String password)
     {
         PlugsExceptions.UsernameNotNull.maybe(username == null);
         PlugsExceptions.PasswordNotMatch.maybe(password == null);

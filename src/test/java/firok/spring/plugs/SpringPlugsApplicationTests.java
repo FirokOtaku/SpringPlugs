@@ -19,6 +19,8 @@ import javax.sql.DataSource;
 import java.util.ArrayList;
 import java.util.UUID;
 
+import static org.assertj.core.util.Arrays.sizeOf;
+
 @TestPropertySource("classpath:application.yml")
 @SpringBootTest(
         classes = {
@@ -186,10 +188,21 @@ class SpringPlugsApplicationTests
         Assertions.assertNotNull(tokenNew);
         Assertions.assertNotEquals(user1.getTokenCookie(), tokenNew);
 
-        Assertions.assertNotNull(serviceUser.auth("u1", "p1"));
+        Assertions.assertNotNull(serviceUser.checkPassword("u1", "p1"));
 
         Assertions.assertTrue(serviceUser.deleteUserById(uid));
 
         Assertions.assertEquals(0, new QUserBean().findCount());
+    }
+
+    @Test
+    void testEncryptService()
+    {
+        var raw1 = "123456789";
+        var enc1 = serviceEncrypt.enc(raw1);
+        Assertions.assertNotNull(enc1);
+        Assertions.assertNotEquals(0, sizeOf(enc1));
+        var dec1 = serviceEncrypt.dec(enc1);
+        Assertions.assertEquals(raw1, dec1);
     }
 }
