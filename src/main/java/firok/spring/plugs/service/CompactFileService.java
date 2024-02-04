@@ -44,6 +44,12 @@ public class CompactFileService extends AbstractCompactService
         return FileBean.TableName;
     }
 
+    @Override
+    protected boolean shouldAutoCreateTable()
+    {
+        return config.getAutoCreateTable();
+    }
+
     @Autowired
     FileConfig config;
 

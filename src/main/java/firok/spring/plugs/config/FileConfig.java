@@ -18,6 +18,9 @@ public class FileConfig
     @Value("${file-local:/caches}")
     File folderLocal;
 
+    @Value("${auto-table-creation:false}")
+    Boolean autoCreateTable;
+
     @PostConstruct
     void mkdirs()
     {

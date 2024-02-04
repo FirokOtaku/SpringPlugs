@@ -7,6 +7,7 @@ import firok.spring.plugs.util.TableUtil;
 import io.ebean.DB;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +36,15 @@ public class CompactTagService extends AbstractCompactService
     {
         return TagBean.CreateTableMysql;
     }
+
+    @Override
+    protected boolean shouldAutoCreateTable()
+    {
+        return config.getAutoCreateTable();
+    }
+
+    @Autowired
+    TagConfig config;
 
     public List<String> getTargetTags(
             @NotNull String tagType,

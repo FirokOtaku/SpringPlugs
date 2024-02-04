@@ -42,6 +42,15 @@ public class CompactUserService extends AbstractCompactService
         return UserBean.CreateTableMysql;
     }
 
+    @Override
+    protected boolean shouldAutoCreateTable()
+    {
+        return config.getAutoCreateTable();
+    }
+
+    @Autowired
+    UserConfig config;
+
     /**
      * 根据 id 获取用户数据
      * */

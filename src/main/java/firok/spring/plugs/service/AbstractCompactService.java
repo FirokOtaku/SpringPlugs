@@ -35,14 +35,22 @@ public abstract class AbstractCompactService
      * */
     protected abstract String sqlTableName();
 
+    /**
+     * 是否应该在启动的时候检查并创建表结构
+     * */
+    protected abstract boolean shouldAutoCreateTable();
+
     @PostConstruct
     private void postConstruct() throws SQLException
     {
-        TableUtil.createTableIfNotExist(
-                ds,
-                this.sqlTableName(),
-                this.sqlShowTables(),
-                this.sqlCreateTable()
-        );
+        if(shouldAutoCreateTable())
+        {
+            TableUtil.createTableIfNotExist(
+                    ds,
+                    this.sqlTableName(),
+                    this.sqlShowTables(),
+                    this.sqlCreateTable()
+            );
+        }
     }
 }

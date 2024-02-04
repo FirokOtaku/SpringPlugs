@@ -10,10 +10,13 @@ firok:
       file:
         enable: true
         folder-local: ./caches
+        auto-table-creation: true
       tag:
         enable: true
+        auto-table-creation: true
       user:
         enable: true
+        auto-table-creation: true
 
 spring:
   datasource:

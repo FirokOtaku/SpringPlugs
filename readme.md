@@ -26,7 +26,13 @@ firok:
       file:
         enable: true
         folder-local: ./files
+        auto-table-creation: true
       # 标签模块
       tag:
         enable: true
+        auto-table-creation: true
+      # 用户模块
+      user:
+        enable: true
+        auto-table-creation: true
 ```
