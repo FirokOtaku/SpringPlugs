@@ -1,4 +1,4 @@
-package firok.spring.plugs.bean;
+package firok.spring.plugs.bean.foundation;
 
 import firok.spring.plugs.bean.property.*;
 import lombok.Data;
@@ -11,12 +11,12 @@ import java.util.Date;
 @Data
 @MappedSuperclass
 @Accessors(chain = false)
-public class StringIdTimestampDateBean
-    implements IdProperty<String>,
+public class IdLongTimestampDateBean
+    implements IdProperty<Long>,
         TimestampCreateDateProperty, TimestampUpdateDateProperty, TimestampDeleteDateProperty, IsDeleteProperty
 {
     @Id
-    String id;
+    Long id;
     Date timestampCreate, timestampUpdate, timestampDelete;
     Boolean isDelete;
 }

@@ -1,4 +1,4 @@
-package firok.spring.plugs.bean;
+package firok.spring.plugs.bean.foundation;
 
 import firok.spring.plugs.bean.property.ChainedIdProperty;
 import firok.spring.plugs.bean.property.ChainedIsDeleteProperty;

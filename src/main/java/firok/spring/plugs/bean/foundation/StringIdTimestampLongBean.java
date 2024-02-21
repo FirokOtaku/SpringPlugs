@@ -1,4 +1,4 @@
-package firok.spring.plugs.bean;
+package firok.spring.plugs.bean.foundation;
 
 import firok.spring.plugs.bean.property.*;
 import lombok.Data;
@@ -10,12 +10,12 @@ import javax.persistence.MappedSuperclass;
 @Data
 @MappedSuperclass
 @Accessors(chain = false)
-public class IdLongTimestampLongBean
-    implements IdProperty<Long>,
+public class StringIdTimestampLongBean
+    implements IdProperty<String>,
         TimestampCreateLongProperty, TimestampUpdateLongProperty, TimestampDeleteLongProperty, IsDeleteProperty
 {
     @Id
-    Long id;
+    String id;
     Long timestampCreate, timestampUpdate, timestampDelete;
     Boolean isDelete;
 }
