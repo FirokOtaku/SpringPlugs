@@ -27,6 +27,7 @@ public class UserBean extends AbstractPlugBean
               username varchar(64) not null,
               nickname varchar(64) not null,
               password varchar(64) not null,
+              password_salt varchar(64),
               token_cookie varchar(64) not null
             )
             """;
@@ -43,6 +44,10 @@ public class UserBean extends AbstractPlugBean
      * 密码
      * */
     String password;
+    /**
+     * 密码盐值
+     * */
+    String passwordSalt;
     /**
      * 用户 token 加盐
      * */

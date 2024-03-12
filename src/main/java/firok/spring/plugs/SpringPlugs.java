@@ -20,7 +20,7 @@ public class SpringPlugs
     public static final ProgramMeta META = new ProgramMeta(
             "firok.spring.plugs",
             "Spring Plugs",
-            new Version(0, 19, 0, "j21"),
+            new Version(0, 20, 0, "j21"),
             "personal Spring Boot utility library",
             List.of("Firok"),
             List.of("https://github.com/FirokOtaku/SpringPlugs"),

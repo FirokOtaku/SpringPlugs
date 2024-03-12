@@ -112,6 +112,7 @@ public class CompactUserService extends AbstractCompactService
         var user = getUserByUsername(username);
         PlugsExceptions.UserNotFound.maybe(user == null);
         assert user != null;
+        // fixme high 密码加盐加密
         PlugsExceptions.PasswordNotMatch.maybe(!Objects.equals(password, user.getPassword()));
         return user;
     }
@@ -130,6 +131,7 @@ public class CompactUserService extends AbstractCompactService
 
         var userId = UUID.randomUUID().toString();
         var cookieToken = UUID.randomUUID().toString().substring(0, 8);
+        // fixme high 密码加盐加密
         var user = new UserBean();
         user.setId(userId);
         user.setUsername(username);
