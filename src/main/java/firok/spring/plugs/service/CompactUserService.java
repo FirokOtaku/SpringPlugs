@@ -183,7 +183,7 @@ public class CompactUserService extends AbstractCompactService
             PlugsExceptions.UserNotFound.maybe(user == null);
             assert user != null;
             PlugsExceptions.TokenNotMatch.maybe(!Objects.equals(cookieToken, user.getTokenCookie()));
-            PlugsExceptions.TokenExpired.maybe(Long.parseLong(timeEnd) > System.currentTimeMillis());
+            PlugsExceptions.TokenExpired.maybe(Long.parseLong(timeEnd) < System.currentTimeMillis());
             return user;
         }
         catch (Exception any)

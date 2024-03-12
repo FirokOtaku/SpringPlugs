@@ -1,8 +1,11 @@
 package firok.spring.plugs;
 
+import firok.topaz.Topaz;
 import firok.topaz.general.CodeExceptionThrower;
 import firok.topaz.general.I18N;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Locale;
 
 public enum PlugsExceptions implements CodeExceptionThrower
 {
@@ -34,9 +37,10 @@ public enum PlugsExceptions implements CodeExceptionThrower
         return code;
     }
 
+    private static final I18N i18n = new I18N("/firok/spring/plugs/errors", Locale.CHINA, SpringPlugs.class);
     @Override
     public @Nullable I18N getI18N()
     {
-        return null;
+        return i18n;
     }
 }

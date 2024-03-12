@@ -1,0 +1,13 @@
+error-7001=UserNotFound
+error-7002=PasswordNotMatch
+error-7003=PasswordNotNull
+error-7004=UsernameNotNull
+error-7005=NicknameNotNull
+error-7006=UsernameAlreadyExist
+error-7007=UserModuleInitFail
+error-7011=WriteCookieTokenFail
+error-7012=ReadCookieTokenFail
+error-7013=TokenFormatError
+error-7014=TokenTypeError
+error-7015=TokenNotMatch
+error-7016=TokenExpired
