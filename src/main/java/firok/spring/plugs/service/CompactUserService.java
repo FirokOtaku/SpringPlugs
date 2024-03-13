@@ -218,6 +218,8 @@ public class CompactUserService extends AbstractCompactService
     {
        try
        {
+           // todo check timeLast range
+
            var cookieToken = user.getTokenCookie();
            var timeNow = System.currentTimeMillis();
            var timeEnd = timeNow + timeLast;
@@ -234,8 +236,17 @@ public class CompactUserService extends AbstractCompactService
 
     /**
      * 对 cookie 中的 token 进行鉴权
+     * @param tokenValue token 值
      * */
     public UserBean checkCookieToken(String tokenValue)
+    {
+        return checkCookieToken(tokenValue, System.currentTimeMillis());
+    }
+    /**
+     * 手动指定时间戳并鉴权
+     * @param timestamp 要对比的时间戳
+     * */
+    public UserBean checkCookieToken(String tokenValue, long timestamp)
     {
         try
         {
@@ -249,7 +260,7 @@ public class CompactUserService extends AbstractCompactService
             PlugsExceptions.UserNotFound.maybe(user == null);
             assert user != null;
             PlugsExceptions.TokenNotMatch.maybe(!Objects.equals(cookieToken, user.getTokenCookie()));
-            PlugsExceptions.TokenExpired.maybe(Long.parseLong(timeEnd) < System.currentTimeMillis());
+            PlugsExceptions.TokenExpired.maybe(Long.parseLong(timeEnd) < timestamp);
             return user;
         }
         catch (Exception any)

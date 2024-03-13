@@ -8,6 +8,8 @@ import firok.spring.plugs.bean.query.QUserBean;
 import firok.spring.plugs.config.*;
 import firok.spring.plugs.service.*;
 import firok.topaz.database.Databases;
+import firok.topaz.general.CodeException;
+import firok.topaz.thread.Threads;
 import io.ebean.Database;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -206,5 +208,42 @@ class SpringPlugsApplicationTests
         Assertions.assertNotEquals(0, sizeOf(enc1));
         var dec1 = serviceEncrypt.dec(enc1);
         Assertions.assertEquals(raw1, dec1);
+    }
+
+    /**
+     * 检查用户 token 生成有没有问题
+     * */
+    @Test
+    void testUserTokenGeneration()
+    {
+        System.out.println("创建测试用户");
+        serviceUser.createUser("user-test", "nickname-test", "password-test");
+        var user = serviceUser.getUserByUsername("user-test");
+        Assertions.assertNotNull(user);
+
+        System.out.println("创建短时有效 token 并校验");
+        var token5s = serviceUser.generateCookieToken(user, 3000);
+        var user5s1 = serviceUser.checkCookieToken(token5s);
+        var user5s2 = serviceUser.checkCookieToken(token5s);
+        var user5s3 = serviceUser.checkCookieToken(token5s);
+        Assertions.assertNotNull(user5s1);
+        Assertions.assertNotNull(user5s2);
+        Assertions.assertNotNull(user5s3);
+
+        Threads.sleep(3000);
+        Assertions.assertThrows(CodeException.class, () -> serviceUser.checkCookieToken(token5s));
+
+        System.out.println("创建长时有效 token 并手动令其失效");
+        var token1d1 = serviceUser.generateCookieToken(user, 24L * 60 * 60 * 1000);
+        var token1d2 = serviceUser.generateCookieToken(user, 24L * 60 * 60 * 1000);
+        Assertions.assertNotNull(serviceUser.checkCookieToken(token1d1));
+        Assertions.assertNotNull(serviceUser.checkCookieToken(token1d2));
+        serviceUser.updateCookieToken(user.getId());
+        Assertions.assertThrows(CodeException.class, () -> serviceUser.checkCookieToken(token1d1));
+        Assertions.assertThrows(CodeException.class, () -> serviceUser.checkCookieToken(token1d2));
+
+        System.out.println("删除测试用户");
+        serviceUser.deleteUserById(user.getId());
+        Assertions.assertNull(serviceUser.getUserByUsername("test-user"));
     }
 }
