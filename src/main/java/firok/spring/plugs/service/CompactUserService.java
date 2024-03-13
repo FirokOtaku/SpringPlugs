@@ -6,11 +6,14 @@ import firok.spring.plugs.bean.query.QUserBean;
 import firok.spring.plugs.config.UserConfig;
 import firok.spring.plugs.util.TableUtil;
 import firok.topaz.general.CodeException;
+import firok.topaz.general.Encrypts;
 import io.ebean.DB;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.stereotype.Service;
 
+import javax.crypto.Mac;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 import static firok.topaz.general.Collections.isEmpty;
@@ -99,6 +102,8 @@ public class CompactUserService extends AbstractCompactService
         return true; // todo handle exception
     }
 
+    private static final String HMAC_KEY = "6dcf3020-e8b5648dc4b2";
+    public static final Mac HMAC_MAC = Encrypts.initHMACMac(HMAC_KEY);
     /**
      * 校验用户名密码是否可用
      * @return 查询到的用户数据
@@ -112,9 +117,67 @@ public class CompactUserService extends AbstractCompactService
         var user = getUserByUsername(username);
         PlugsExceptions.UserNotFound.maybe(user == null);
         assert user != null;
-        // fixme high 密码加盐加密
-        PlugsExceptions.PasswordNotMatch.maybe(!Objects.equals(password, user.getPassword()));
+        PlugsExceptions.PasswordNotMatch.maybe(!matchUser(user, password.getBytes(StandardCharsets.UTF_8)));
         return user;
+    }
+
+    /**
+     * 匹配用户密码是否正确, {@link UserBean} 参数必须是从数据库里查询出来的
+     * */
+    public boolean matchUser(UserBean user, byte[] password)
+    {
+        if(config.getPasswordSalt())
+        {
+            var saltReal = user.getPasswordSalt();
+            var signatureReal = user.getPassword();
+
+            var buffer = bufferMixture(saltReal, password);
+            var signature = Encrypts.encodeHMAC(buffer, HMAC_MAC);
+
+            return Arrays.equals(signature, signatureReal);
+        }
+        else
+        {
+            return Arrays.equals(password, user.getPassword());
+        }
+    }
+    public boolean matchUser(UserBean user, String password)
+    {
+        return matchUser(user, password.getBytes(StandardCharsets.UTF_8));
+    }
+
+    /**
+     * 对一个用户信息做处理, {@link UserBean#password} 字段必须储存的是明文密码
+     * */
+    @SuppressWarnings("JavadocReference")
+    public void processUserPassword(UserBean user, String password)
+    {
+        if(config.getPasswordSalt())
+        {
+            var salt = UUID.randomUUID().toString().substring(0, 24).getBytes(StandardCharsets.US_ASCII);
+
+            var buffer = bufferMixture(salt, password.getBytes(StandardCharsets.UTF_8));
+            var signature = Encrypts.encodeHMAC(buffer, HMAC_MAC);
+
+            user.setPassword(signature);
+            user.setPasswordSalt(salt);
+        }
+        else
+        {
+            user.setPassword(password.getBytes(StandardCharsets.UTF_8));
+            user.setPasswordSalt(null);
+        }
+    }
+
+    /**
+     * 将密码和盐混合到一起, 获得一个 byte[] 缓冲区
+     * */
+    public static byte[] bufferMixture(byte[] salt, byte[] password)
+    {
+        var ret = new byte[salt.length + password.length];
+        System.arraycopy(salt, 0, ret, 0, salt.length);
+        System.arraycopy(password, 0, ret, salt.length, password.length);
+        return ret;
     }
 
     /**
@@ -131,13 +194,14 @@ public class CompactUserService extends AbstractCompactService
 
         var userId = UUID.randomUUID().toString();
         var cookieToken = UUID.randomUUID().toString().substring(0, 8);
-        // fixme high 密码加盐加密
+
         var user = new UserBean();
         user.setId(userId);
         user.setUsername(username);
-        user.setPassword(password);
         user.setNickname(nickname);
         user.setTokenCookie(cookieToken);
+        processUserPassword(user, password);
+
         DB.save(user);
 
         return user;

@@ -16,13 +16,5 @@ public class UserConfig
     Boolean autoCreateTable;
 
     @Value("${password-salt:}")
-    String passwordSalt;
-
-    /**
-     * 是否需要对用户模块的密码存储进行加盐加密
-     * */
-    public boolean isPasswordSalted()
-    {
-        return passwordSalt != null && !passwordSalt.isEmpty();
-    }
+    Boolean passwordSalt;
 }

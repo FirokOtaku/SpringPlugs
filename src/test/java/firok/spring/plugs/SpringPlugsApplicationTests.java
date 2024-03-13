@@ -16,6 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 
 import javax.sql.DataSource;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -89,7 +90,7 @@ class SpringPlugsApplicationTests
             var user = new UserBean();
             user.setId(UUID.randomUUID().toString());
             user.setUsername("123");
-            user.setPassword("123");
+            user.setPassword("123".getBytes(StandardCharsets.UTF_8));
             user.setNickname("123");
             user.setTokenCookie("123");
             db.save(user);

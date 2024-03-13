@@ -17,7 +17,7 @@ firok:
       user:
         enable: true
         auto-table-creation: true
-        password-salt: 12345678
+        password-salt: true
 
 spring:
   datasource:
