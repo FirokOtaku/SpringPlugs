@@ -22,7 +22,7 @@ firok:
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/alloy-desk?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf8&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull
+    url: jdbc:mysql://localhost:3306/spring-plugs?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf8&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull
     #    driver-class-name: org.h2.Driver
     #    url: jdbc:h2:./alloy-desk-database/main.db;AUTO_SERVER=TRUE
     username: root

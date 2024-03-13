@@ -179,7 +179,8 @@ class SpringPlugsApplicationTests
         Assertions.assertNotNull(user1);
         Assertions.assertEquals("u1", user1.getUsername());
         Assertions.assertEquals("n1", user1.getNickname());
-        Assertions.assertEquals("p1", user1.getPassword());
+        Assertions.assertTrue(serviceUser.matchUser(user1, "p1"));
+
         Assertions.assertNotNull(user1.getTokenCookie());
 
         Assertions.assertTrue(serviceUser.updateCookieToken(uid));
