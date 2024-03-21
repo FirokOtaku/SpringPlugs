@@ -7,6 +7,7 @@ import firok.spring.plugs.util.TableUtil;
 import firok.topaz.hash.IHashMapper;
 import io.ebean.DB;
 import jakarta.servlet.http.HttpServletResponse;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.core.io.FileSystemResource;
@@ -19,6 +20,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.text.DateFormat;
 import java.util.Date;
 import java.util.UUID;
 
@@ -112,6 +114,40 @@ public class CompactFileService extends AbstractCompactService
         if(file == null)
             throw new IllegalArgumentException("file info not found: " + id);
         return file;
+    }
+
+    /**
+     * 辅助实现文件下载的工具方法
+     * @param file 要下载的文件
+     * @param filenameOverride 如果需要覆盖文件名, 则传入这个参数, 否则传 null
+     * @implNote 最好在 @XXXMapping 上面加上 produces = MimeTypeUtils.APPLICATION_OCTET_STREAM_VALUE
+     * */
+    public FileSystemResource writeFile(
+            File file,
+            @Nullable String filenameOverride,
+            HttpServletResponse response
+    )
+    {
+        try
+        {
+            var filename = URLEncoder.encode(
+                    filenameOverride != null ? filenameOverride : file.getName(),
+                    StandardCharsets.UTF_8
+            );
+            var now = System.currentTimeMillis();
+            response.setStatus(HttpServletResponse.SC_OK);
+            response.setHeader(HttpHeaders.CONTENT_TYPE, MimeTypeUtils.APPLICATION_OCTET_STREAM_VALUE);
+            response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + ".pth\"");
+            response.setHeader(HttpHeaders.CONTENT_LENGTH, String.valueOf(file.length()));
+            response.setHeader(HttpHeaders.EXPIRES, new Date(now + 600_000).toGMTString());
+            return new FileSystemResource(file);
+        }
+        catch (Exception any)
+        {
+            any.printStackTrace(System.err);
+            response.setStatus(404);
+            return null;
+        }
     }
 
     /**
