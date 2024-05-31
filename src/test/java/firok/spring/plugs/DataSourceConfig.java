@@ -18,7 +18,7 @@ public class DataSourceConfig
 	@Value("${spring.datasource.username}")
 	String username;
 	@Value("${spring.datasource.password}")
-	String password = "redstone-mysql-000";
+	String password = "";
 
 	@Value("${spring.datasource.hikari.minimum-idle}")
 	Integer minimumIdle;
