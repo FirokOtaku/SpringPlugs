@@ -5,6 +5,8 @@ import org.intellij.lang.annotations.Language;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.io.Serial;
+import java.io.Serializable;
 
 /**
  * 用户数据
@@ -12,8 +14,11 @@ import javax.persistence.Table;
 @Data
 @Entity
 @Table(name = UserBean.TableName)
-public class UserBean extends AbstractPlugBean
+public class UserBean extends AbstractPlugBean implements Serializable
 {
+    @Serial
+    private static final long serialVersionUID = Base + 10000 + 1;
+
     public static final String TableName = "d_plugs_user";
     @SuppressWarnings("SqlNoDataSourceInspection")
     @Language("SQL")

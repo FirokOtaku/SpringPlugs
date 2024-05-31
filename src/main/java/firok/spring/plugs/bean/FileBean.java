@@ -5,6 +5,8 @@ import org.intellij.lang.annotations.Language;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.io.Serial;
+import java.io.Serializable;
 
 /**
  * 上传的文件数据
@@ -12,8 +14,11 @@ import javax.persistence.Table;
 @Data
 @Entity
 @Table(name = FileBean.TableName)
-public class FileBean extends AbstractPlugBean
+public class FileBean extends AbstractPlugBean implements Serializable
 {
+    @Serial
+    private static final long serialVersionUID = Base + 20000 + 1;
+
     public static final String TableName = "d_plugs_file";
     @SuppressWarnings("SqlNoDataSourceInspection")
     @Language("SQL")

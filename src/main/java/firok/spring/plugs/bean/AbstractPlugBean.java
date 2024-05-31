@@ -13,6 +13,8 @@ import javax.persistence.MappedSuperclass;
 @Accessors(chain = true)
 public abstract class AbstractPlugBean
 {
+    protected static final long Base = 2500_0000;
+
     @Id
     String id;
 

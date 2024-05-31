@@ -5,17 +5,12 @@ import firok.spring.plugs.config.EncryptConfig;
 import firok.spring.plugs.config.UserConfig;
 import firok.spring.plugs.service.CompactEncryptService;
 import firok.spring.plugs.service.CompactUserService;
-import firok.topaz.general.Encrypts;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 
-import java.nio.charset.StandardCharsets;
-import java.security.KeyStore;
-import java.security.spec.RSAPublicKeySpec;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.UUID;

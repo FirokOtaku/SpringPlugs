@@ -1,6 +1,5 @@
 package firok.spring.plugs;
 
-import firok.topaz.Topaz;
 import firok.topaz.general.CodeExceptionThrower;
 import firok.topaz.general.I18N;
 import org.jetbrains.annotations.Nullable;

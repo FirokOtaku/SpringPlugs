@@ -5,12 +5,17 @@ import org.intellij.lang.annotations.Language;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.io.Serial;
+import java.io.Serializable;
 
 @Data
 @Entity
 @Table(name = TagBean.TableName)
-public class TagBean extends AbstractPlugBean
+public class TagBean extends AbstractPlugBean implements Serializable
 {
+    @Serial
+    private static final long serialVersionUID = Base + 30000 + 1;
+
     public static final String TableName = "d_plugs_tag";
     @SuppressWarnings("SqlNoDataSourceInspection")
     @Language("SQL")
